@@ -183,18 +183,20 @@ class MemberRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
 
         //when
-        List<Member> page = memberRepository.findByAge(age, pageRequest);
+        Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+        /**Entity는 숨겨야 하기 때문에 Dto로 반환 후 클라이언트로 전달*/
+        Page<MemberDto> toMap = page.map(member -> new MemberDto(member.getId(), member.getUsername(), null));
 
         //then
-//        List<Member> content = page.getContent();
-//        long totalElements = page.getTotalElements();
+        List<Member> content = page.getContent();
 
-//        assertThat(content.size()).isEqualTo(3);
-//        assertThat(page.getTotalElements()).isEqualTo(5);
-//        assertThat(page.getNumber()).isEqualTo(0);
-//        assertThat(page.getTotalPages()).isEqualTo(2);
-//        assertThat(page.isFirst()).isTrue();
-//        assertThat(page.hasNext()).isTrue();
+        assertThat(content.size()).isEqualTo(3);
+        assertThat(page.getTotalElements()).isEqualTo(5);
+        assertThat(page.getNumber()).isEqualTo(0);
+        assertThat(page.getTotalPages()).isEqualTo(2);
+        assertThat(page.isFirst()).isTrue();
+        assertThat(page.hasNext()).isTrue();
 
     }
 
